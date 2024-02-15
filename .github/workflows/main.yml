@@ -19,12 +19,15 @@ jobs:
 
     - name: Install Dependencies
       run: |
+        cd frontend
         sudo apt-get update
         sudo apt-get install -y git-lfs python3-xarray
         npm install
 
     - name: Build the project
-      run: make pages
+      run: |
+        cd frontend
+        make pages
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
