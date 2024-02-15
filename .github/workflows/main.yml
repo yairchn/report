@@ -17,17 +17,19 @@ jobs:
         git lfs install
         git lfs pull
 
+    - name: Install Dependencies
+      run: |
+        cd frontend
+        npm install
+        python -m pip install --upgrade pip
+        pip install xarray netcdf4 h5netcdf
+
     # Add the new steps here
     - name: Generate lagged-ensemble.csv
       run: cat 34Vars/lagged_ensembles/*.csv > frontend/public/lagged-ensemble.csv
 
     - name: Generate medium-range.csv
       run: python3 bin/convert_netcdfs_to_csv.py frontend/public/medium-range.csv
-
-    - name: Install Dependencies
-      run: |
-        cd frontend
-        npm install
 
     - name: Build Next.js Application
       run: |
