@@ -17,21 +17,29 @@ jobs:
         git lfs install
         git lfs pull
 
+    # Add the new steps here
+    - name: Generate lagged-ensemble.csv
+      run: cat 34Vars/lagged_ensembles/*.csv > frontend/public/lagged-ensemble.csv
+
+    - name: Generate medium-range.csv
+      run: python3 bin/convert_netcdfs_to_csv.py frontend/public/medium-range.csv
+
     - name: Install Dependencies
       run: |
         cd frontend
-        sudo apt-get update
-        sudo apt-get install -y git-lfs python3-xarray
         npm install
 
-    - name: Build the project
+    - name: Build Next.js Application
       run: |
         cd frontend
-        make pages
+        npm run build
 
+    - name: Copy Built Files for Deployment
+      run: cp -r frontend/out/* public/
+
+    # Assuming you're using peaceiris/actions-gh-pages for deployment
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./public
-
+        publish_dir: ./public  # Make sure this points to the right directory
